@@ -11,5 +11,10 @@ config_version=5
 [application]
 
 config/name="KartGame"
+run/main_scene="res://steam/steam_controller.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[debug]
+
+file_logging/enable_file_logging=true
