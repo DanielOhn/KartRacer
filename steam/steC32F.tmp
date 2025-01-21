@@ -57,25 +57,22 @@ offset_left = -181.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="FriendList" type="RichTextLabel" parent="FriendPanel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 23.0
-grow_horizontal = 2
-bbcode_enabled = true
-text = "[center]Friend List[/center]"
-fit_content = true
-scroll_active = false
-
 [node name="ScrollContainer" type="ScrollContainer" parent="FriendPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 28.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Title" type="VBoxContainer" parent="FriendPanel/ScrollContainer"]
+layout_mode = 2
+
+[node name="FriendList" type="RichTextLabel" parent="FriendPanel/ScrollContainer/Title"]
+layout_mode = 2
+text = "Friend List"
+fit_content = true
+scroll_active = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="FriendPanel/ScrollContainer"]
 layout_mode = 2

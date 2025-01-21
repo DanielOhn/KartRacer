@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1rutrcl1ky36"]
+
+[ext_resource type="Texture2D" uid="uid://cjctp4o5sik7m" path="res://icon.svg" id="1_dvran"]
+[ext_resource type="Script" path="res://assets/ui/friend_card.gd" id="1_et5wd"]
+
+[node name="FriendCard" type="Control"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 3
+anchors_preset = 0
+offset_bottom = 40.0
+script = ExtResource("1_et5wd")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProfilePic" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_dvran")
+expand_mode = 2
+
+[node name="Name" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "Name"
+scroll_active = false
+scroll_following = true
+autowrap_mode = 0
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+text_direction = 1
