@@ -21,4 +21,4 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass # Might have to call Steam.callbacks() here in the future
+	Steam.run_callbacks()
