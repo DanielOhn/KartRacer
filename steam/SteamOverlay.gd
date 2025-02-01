@@ -2,27 +2,11 @@ extends Node
 
 @export var FriendCard: PackedScene
 
-var playerId
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var init_response: Dictionary  = Steam.steamInitEx(true, 480)
-	print("Did Steam initialize?: %s " % init_response)
-	
-	var steamRunning = Steam.isSteamRunning()
-	
-	if steamRunning:
-		print("Steam is running")
-	else:
-		print("Steam is not running")
-		return
-
-	playerId = Steam.getSteamID()
-	var name = Steam.getFriendPersonaName(playerId)
-	
-	$PlayerCard/HBoxContainer/Name.text = name 
+	$PlayerCard/HBoxContainer/Name.text = SteamGlobal.playerUsername 
 	Steam.avatar_loaded.connect(AvatarLoaded)
-	print("Your steam name is ", name)
+	print("Your steam name is ", SteamGlobal.playerUsername)
 	
 	Steam.getPlayerAvatar()
 	getFriends()
@@ -67,7 +51,7 @@ func AvatarLoaded(id, size, buffer):
 	var avatarImage = Image.create_from_data(size, size, false, Image.FORMAT_RGBA8, buffer)
 	var texture = ImageTexture.create_from_image(avatarImage)
 	
-	if id == playerId:
+	if id == SteamGlobal.playerSteamId:
 		$PlayerCard/HBoxContainer/ProfilePic.texture = texture
 	else:
 		for i in $FriendPanel/ScrollContainer/VBoxContainer.get_children():
