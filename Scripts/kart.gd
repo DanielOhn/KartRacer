@@ -1,9 +1,9 @@
 extends CharacterBody3D
 
 
-const SPEED = 200.0
-const JUMP_VELOCITY = 4.5
-const  ROTATE_speed = 0.5
+@export var SPEED = 200.0
+@export var JUMP_VELOCITY = 4.5
+@export var  ROTATE_speed = 0.5
 @onready var camera: Camera3D = $Camera3D
 
 func _physics_process(delta: float) -> void:
@@ -27,8 +27,8 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		
 	if Input.is_action_pressed("ui_right") :
-		rotate_y(-ROTATE_speed)
+		rotate_y(-ROTATE_speed * delta)
 	if Input.is_action_pressed("ui_left") :
-		rotate_y(ROTATE_speed)
+		rotate_y(ROTATE_speed * delta)
 
 	move_and_slide()

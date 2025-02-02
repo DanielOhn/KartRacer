@@ -10,6 +10,9 @@ var lobby_vote_kick: bool = false
 var steam_id: int = 0
 var steam_username: String = ""
 
+var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
+@onready var main_menu = $".."
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Steam.join_requested.connect(_on_lobby_join_requested)
@@ -61,12 +64,16 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		Steam.setLobbyJoinable(lobby_id, true)
 
 		# Set some lobby data
-		Steam.setLobbyData(lobby_id, "name", "Cats Lobby")
+		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
 		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
 
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
+		
+		
+		get_tree().root.add_child(kart_lobby)
+		main_menu.hide()
 
 func _on_open_lobby_list_pressed() -> void:
 	# Set distance to worldwide
