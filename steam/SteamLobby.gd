@@ -100,7 +100,7 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 
 		# Add the new lobby to the list
 		#$Lobbies/Scroll/List.add_child(lobby_button)
-		$ScrollContainer/VBoxContainer.add_child(lobby_button)
+		$LobbyUI/ScrollContainer/VBoxContainer.add_child(lobby_button)
 
 func join_lobby(this_lobby_id: int) -> void:
 	print("Attempting to join lobby %s" % lobby_id)
