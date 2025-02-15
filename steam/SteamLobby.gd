@@ -2,6 +2,9 @@ extends Control
 
 const PACKET_READ_LIMIT: int = 32
 
+var peer : MultiplayerPeer = null
+
+var is_host: bool = false
 var lobby_data
 var lobby_id: int = 0
 var lobby_members: Array = []
@@ -66,7 +69,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		# Set some lobby data
 		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
 		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
-
+		create_steam_socket()
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
@@ -77,7 +80,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 
 func _on_open_lobby_list_pressed() -> void:
 	# Set distance to worldwide
-	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
+	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_DEFAULT)
 	print("Requesting a lobby list")
 	Steam.requestLobbyList()
 
@@ -116,7 +119,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
-
+		connect_steam_socket(this_lobby_id)
 		# Get the lobby members
 		get_lobby_members()
 
@@ -200,3 +203,14 @@ func leave_lobby() -> void:
 
 		# Clear the local lobby list
 		lobby_members.clear()
+		
+#region Steam Peer Management
+func create_steam_socket():
+	peer = SteamMultiplayerPeer.new()
+	peer.create_host(0)
+	multiplayer.set_multiplayer_peer(peer)
+
+func connect_steam_socket(steam_id : int):
+	peer = SteamMultiplayerPeer.new()
+	peer.create_client(steam_id, 0)
+	multiplayer.set_multiplayer_peer(peer)
