@@ -125,9 +125,13 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
-		connect_steam_socket(this_lobby_id)
-		# Get the lobby members
-		get_lobby_members()
+		var id = Steam.getLobbyOwner(this_lobby_id)
+		if id != Steam.getSteamID():		
+			connect_steam_socket(id)
+			register_player.rpc(SteamGlobal.playerUsername)
+			# Get the lobby members
+			#lobby_members[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
+			get_lobby_members()
 
 		# Make the initial handshake
 		#make_p2p_handshake()
