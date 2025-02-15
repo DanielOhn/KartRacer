@@ -11,7 +11,7 @@ var lobby_members: Array = []
 var lobby_members_max: int = 8
 var lobby_vote_kick: bool = false
 var steam_id: int = 0
-var steam_username: String = ""
+
 
 var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
 @onready var main_menu = $".."
@@ -30,6 +30,12 @@ func _ready():
 
 	# Check for command line arguments
 	check_command_line()
+	
+	multiplayer.peer_connected.connect(
+		func(id : int):
+			# Tell the connected peer that we have also joined
+			register_player.rpc_id(id, SteamGlobal.playerUsername)
+	)
 	
 func check_command_line() -> void:
 	var these_arguments: Array = OS.get_cmdline_args()
@@ -68,7 +74,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 
 		# Set some lobby data
 		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
-		Steam.setLobbyData(lobby_id, "mode", "GodotSteam test")
+		Steam.setLobbyData(lobby_id, "mode", "")
 		create_steam_socket()
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
@@ -214,3 +220,21 @@ func connect_steam_socket(steam_id : int):
 	peer = SteamMultiplayerPeer.new()
 	peer.create_client(steam_id, 0)
 	multiplayer.set_multiplayer_peer(peer)
+
+func _make_string_unique(query : String) -> String:
+	var count := 2
+	var trial := query
+	if lobby_members.has(trial):
+		trial = query + ' ' + str(count)
+		count += 1
+	return trial
+
+@rpc("call_local", "any_peer")
+func get_player_name() -> String:
+	return lobby_members[multiplayer.get_remote_sender_id()]
+	
+# Lobby management functions.
+@rpc("call_local", "any_peer")
+func register_player(new_player_name : String):
+	var id = multiplayer.get_remote_sender_id()
+	lobby_members[id] = _make_string_unique(new_player_name)
