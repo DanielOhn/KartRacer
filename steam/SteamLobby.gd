@@ -54,10 +54,8 @@ func check_command_line() -> void:
 				print("Command line lobby ID: %s" % these_arguments[1])
 				join_lobby(int(these_arguments[1]))
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
+#region Lobby Created
 func create_lobby() -> void:
 	# Make sure a lobby is not already set
 	if lobby_id == 0:
@@ -75,15 +73,18 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		# Set some lobby data
 		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
 		Steam.setLobbyData(lobby_id, "mode", "")
-		create_steam_socket()
+		
 		# Allow P2P connections to fallback to being relayed through Steam if needed
 		var set_relay: bool = Steam.allowP2PPacketRelay(true)
 		print("Allowing Steam to be relay backup: %s" % set_relay)
-		
+		create_steam_socket()
 		
 		get_tree().root.add_child(kart_lobby)
 		main_menu.hide()
+		assert(multiplayer.is_server())
+#endregion 
 
+#region Lobby Match List
 func _on_open_lobby_list_pressed() -> void:
 	# Set distance to worldwide
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_DEFAULT)
@@ -110,7 +111,8 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 		# Add the new lobby to the list
 		#$Lobbies/Scroll/List.add_child(lobby_button)
 		$LobbyUI/ScrollContainer/VBoxContainer.add_child(lobby_button)
-
+#endregion
+#region Lobby Joined
 func join_lobby(this_lobby_id: int) -> void:
 	print("Attempting to join lobby %s" % lobby_id)
 
@@ -126,12 +128,13 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
 		var id = Steam.getLobbyOwner(this_lobby_id)
-		if id != Steam.getSteamID():		
+		if id != Steam.getSteamID():
 			connect_steam_socket(id)
 			register_player.rpc(SteamGlobal.playerUsername)
 			# Get the lobby members
 			#lobby_members[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
 			get_lobby_members()
+			assert(multiplayer.is_server())
 
 		# Make the initial handshake
 		#make_p2p_handshake()
@@ -166,6 +169,8 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 
 	# Attempt to join the lobby
 	join_lobby(this_lobby_id)
+	
+#endregion 
 
 func get_lobby_members() -> void:
 	# Clear your previous lobby list
@@ -184,15 +189,6 @@ func get_lobby_members() -> void:
 
 		# Add them to the list
 		lobby_members.append({"steam_id":member_steam_id, "steam_name":member_steam_name})
-
-# A user's information has changed
-func _on_persona_change(this_steam_id: int, _flag: int) -> void:
-	# Make sure you're in a lobby and this user is valid or Steam might spam your console log
-	if lobby_id > 0:
-		print("A user (%s) had information change, update the lobby list" % this_steam_id)
-
-		# Update the player list
-		get_lobby_members()
 
 func leave_lobby() -> void:
 	# If in a lobby, leave it
@@ -224,7 +220,9 @@ func connect_steam_socket(steam_id : int):
 	peer = SteamMultiplayerPeer.new()
 	peer.create_client(steam_id, 0)
 	multiplayer.set_multiplayer_peer(peer)
+#endregion
 
+#region Player Name Management
 func _make_string_unique(query : String) -> String:
 	var count := 2
 	var trial := query
@@ -242,3 +240,13 @@ func get_player_name() -> String:
 func register_player(new_player_name : String):
 	var id = multiplayer.get_remote_sender_id()
 	lobby_members[id] = _make_string_unique(new_player_name)
+	
+# A user's information has changed
+func _on_persona_change(this_steam_id: int, _flag: int) -> void:
+	# Make sure you're in a lobby and this user is valid or Steam might spam your console log
+	if lobby_id > 0:
+		print("A user (%s) had information change, update the lobby list" % this_steam_id)
+
+		# Update the player list
+		get_lobby_members()
+#endregion
