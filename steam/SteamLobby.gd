@@ -20,10 +20,10 @@ var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
 func _ready():
 	Steam.join_requested.connect(_on_lobby_join_requested)
 	#Steam.lobby_chat_update.connect(_on_lobby_chat_update)
-	Steam.lobby_created.connect(_on_lobby_created)
+	Steam.lobby_created.connect(_on_lobby_created.bind())
 	#Steam.lobby_data_update.connect(_on_lobby_data_update)
 	#Steam.lobby_invite.connect(_on_lobby_invite)
-	Steam.lobby_joined.connect(_on_lobby_joined)
+	Steam.lobby_joined.connect(_on_lobby_joined.bind())
 	Steam.lobby_match_list.connect(_on_lobby_match_list)
 	#Steam.lobby_message.connect(_on_lobby_message)
 	Steam.persona_state_change.connect(_on_persona_change)
@@ -68,20 +68,23 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		print("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
-		Steam.setLobbyJoinable(lobby_id, true)
+		
 
 		# Set some lobby data
 		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
 		Steam.setLobbyData(lobby_id, "mode", "")
+		Steam.setLobbyJoinable(lobby_id, true)
 		
 		# Allow P2P connections to fallback to being relayed through Steam if needed
-		var set_relay: bool = Steam.allowP2PPacketRelay(true)
-		print("Allowing Steam to be relay backup: %s" % set_relay)
+		#var set_relay: bool = Steam.allowP2PPacketRelay(true)
+		#print("Allowing Steam to be relay backup: %s" % set_relay)
 		create_steam_socket()
 		
-		get_tree().root.add_child(kart_lobby)
-		main_menu.hide()
+		#get_tree().root.add_child(kart_lobby)
+		#main_menu.hide()
 		assert(multiplayer.is_server())
+	else:
+		print("ERROR ON LOBBY CREATION")
 #endregion 
 
 #region Lobby Match List
@@ -89,6 +92,11 @@ func _on_open_lobby_list_pressed() -> void:
 	# Set distance to worldwide
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_DEFAULT)
 	print("Requesting a lobby list")
+	
+	var lobbies = $LobbyUI/ScrollContainer/VBoxContainer.get_children()
+	for lobby in lobbies:
+		lobby.queue_free()
+	
 	Steam.requestLobbyList()
 
 func _on_lobby_match_list(these_lobbies: Array) -> void:
@@ -120,11 +128,11 @@ func join_lobby(this_lobby_id: int) -> void:
 	lobby_members.clear()
 
 	# Make the lobby join request to Steam
-	Steam.joinLobby(this_lobby_id)
+	Steam.joinLobby(int(this_lobby_id))
 	
 func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
 	# If joining was successful
-	if response == Steam.CHAT_ROOM_ENTER_RESPONSE_SUCCESS:
+	if response == 1:
 		# Set this lobby ID as your lobby ID
 		lobby_id = this_lobby_id
 		var id = Steam.getLobbyOwner(this_lobby_id)
@@ -249,4 +257,5 @@ func _on_persona_change(this_steam_id: int, _flag: int) -> void:
 
 		# Update the player list
 		get_lobby_members()
+
 #endregion
