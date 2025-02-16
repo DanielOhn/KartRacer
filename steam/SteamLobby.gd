@@ -2,6 +2,8 @@ extends Control
 
 const PACKET_READ_LIMIT: int = 32
 
+@export var UserLobby: Control
+
 var peer : MultiplayerPeer = null
 
 var is_host: bool = false
@@ -13,9 +15,8 @@ var steam_id: int = 0
 
 var players := {}
 
-
 var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
-@onready var main_menu = $".."
+@onready var SteamLobby = $"."
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -63,8 +64,8 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		# print("Allowing Steam to be relay backup: %s" % set_relay)
 		create_steam_socket()
 		
-		get_tree().root.add_child(kart_lobby)
-		main_menu.hide()
+		SteamLobby.hide()
+		UserLobby.show()
 		#assert(multiplayer.is_server())
 		print("Is Server? ", multiplayer.is_server())
 	else:
@@ -270,3 +271,49 @@ func check_command_line() -> void:
 				# Something like a loading into lobby screen
 				print("Command line lobby ID: %s" % these_arguments[1])
 				join_lobby(int(these_arguments[1]))
+
+@rpc("call_local")
+func load_world():
+	# Change scene.
+	var world = load("res://scenes/Lobby/lobby.tscn").instantiate()
+	get_tree().get_root().add_child(world)
+	get_tree().get_root().get_node("Lobby").hide()
+
+	get_tree().set_pause(false) # Unpause and unleash the game!
+
+func begin_game():
+	#Ensure that this is only running on the server; if it isn't, we need
+	#to check our code.
+	assert(multiplayer.is_server())
+	
+	#call load_world on all clients
+	load_world.rpc()
+	
+	#grab the world node and player scene
+	var world : Node3D = get_tree().get_root().get_node("Lobby")
+	world.show()
+	var player_scene := load("res://assets/kart.tscn")
+	
+	#Iterate over our connected peer ids
+	var spawn_index = 0
+	for peer_id in players:
+		print("PEER ID: ", peer_id)
+		var player = player_scene.instantiate()
+		
+		player.set_player_name(players[peer_id])
+		# "true" forces a readable name, which is important, as we can't have sibling nodes
+		# with the same name.
+		world.get_node("MultiplayerSpawner").add_child(player, true)
+		
+		#Set the authorization for the player. This has to be called on all peers to stay in sync.
+		player.set_authority.rpc(peer_id)
+		
+		#Grab our location for the player.
+		#world.get_node("MultiplayerSpawner").SpawnPlayer()
+		var target = world.get_node("PinkBox").position
+		print("PINK BOX: ", world.get_node("PinkBox"))
+		#The peer has authority over the player's position, so to sync it properly,
+		#we need to set that position from that peer with an RPC.
+		player.teleport.rpc_id(peer_id, target)
+		
+		spawn_index += 1
