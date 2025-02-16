@@ -264,9 +264,10 @@ func connect_steam_socket(steam_id : int):
 func _make_string_unique(query : String) -> String:
 	var count := 2
 	var trial := query
-	if lobby_members.has(trial):
-		trial = query + ' ' + str(count)
-		count += 1
+	for lobby_member in lobby_members:
+		if lobby_member.has(trial):
+			trial = query + ' ' + str(count)
+			count += 1
 	return trial
 
 @rpc("call_local", "any_peer")
