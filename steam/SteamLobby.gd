@@ -43,7 +43,7 @@ func _ready():
 func create_lobby() -> void:
 	# Make sure a lobby is not already set
 	if lobby_id == 0:
-		Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, lobby_members_max)
+		Steam.createLobby(2, lobby_members_max)
 
 func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 	if connect == 1:
@@ -73,7 +73,8 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 #region Lobby Match List
 func _on_open_lobby_list_pressed() -> void:
 	# Set distance to worldwide
-	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_DEFAULT)
+	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
+	Steam.addRequestLobbyListResultCountFilter(75)
 	print("Requesting a lobby list")
 	
 	var lobbies = $LobbyUI/ScrollContainer/VBoxContainer.get_children()
@@ -83,25 +84,59 @@ func _on_open_lobby_list_pressed() -> void:
 	Steam.requestLobbyList()
 
 func _on_lobby_match_list(these_lobbies: Array) -> void:
-	print("on_lobby_match_list: ", these_lobbies)
+	#print("on_lobby_match_list: ", these_lobbies)
+	print("Lobby Num: ", len(these_lobbies))
 	for this_lobby in these_lobbies:
-		# Pull lobby data from Steam, these are specific to our example
-		var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
-		var lobby_mode: String = Steam.getLobbyData(this_lobby, "mode")
+		create_lobby_button(this_lobby)
 
-		# Get the current number of members
-		var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
+func create_lobby_button(this_lobby):
+	var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
+	var lobby_mode: String = Steam.getLobbyData(this_lobby, "mode")
 
-		# Create a button for the lobby
-		var lobby_button: Button = Button.new()
-		lobby_button.set_text("Lobby %s: %s [%s] - %s Player(s)" % [this_lobby, lobby_name, lobby_mode, lobby_num_members])
-		lobby_button.set_size(Vector2(800, 50))
-		lobby_button.set_name("lobby_%s" % this_lobby)
-		lobby_button.connect("pressed", Callable(self, "join_lobby").bind(this_lobby))
+	# Get the current number of members
+	var lobby_num_members: int = Steam.getNumLobbyMembers(this_lobby)
 
-		# Add the new lobby to the list
-		#$Lobbies/Scroll/List.add_child(lobby_button)
-		$LobbyUI/ScrollContainer/VBoxContainer.add_child(lobby_button)
+	# Create a button for the lobby
+	var lobby_button: Button = Button.new()
+	lobby_button.set_text("Lobby %s: %s [%s] - %s Player(s)" % [this_lobby, lobby_name, lobby_mode, lobby_num_members])
+	lobby_button.set_size(Vector2(800, 50))
+	lobby_button.set_name("lobby_%s" % this_lobby)
+	lobby_button.connect("pressed", Callable(self, "join_lobby").bind(this_lobby))
+
+	# Add the new lobby to the list
+	#$Lobbies/Scroll/List.add_child(lobby_button)
+	$LobbyUI/ScrollContainer/VBoxContainer.add_child(lobby_button)
+
+func get_lobbies_with_friends() -> Dictionary:
+	var results: Dictionary = {}
+	for i in range(0, Steam.getFriendCount()):
+		var steam_id: int = Steam.getFriendByIndex(i, Steam.FRIEND_FLAG_IMMEDIATE)
+		var game_info: Dictionary = Steam.getFriendGamePlayed(steam_id)
+
+		if game_info.is_empty():
+			# This friend is not playing a game
+			continue
+		else:
+			# They are playing a game, check if it's the same game as ours
+			var app_id: int = game_info['id']
+			var lobby = game_info['lobby']
+			if app_id != Steam.getAppID() or lobby is String:
+				# Either not in this game, or not in a lobby
+				continue
+			if not results.has(lobby):
+				results[lobby] = []
+			results[lobby].append(steam_id)
+	print("FRIEND LOBBIES: ", results)
+	
+	var lobbies = $LobbyUI/ScrollContainer/VBoxContainer.get_children()
+	for lobby in lobbies:
+		lobby.queue_free()
+		
+	for this_lobby in results:
+		create_lobby_button(this_lobby)
+	
+	return results
+
 #endregion
 #region Lobby Joined
 func join_lobby(this_lobby_id: int) -> void:

@@ -54,7 +54,8 @@ text = "Create Lobby"
 
 [node name="JoinLobbyButton" type="Button" parent="LobbyUI/HBoxContainer"]
 layout_mode = 2
-text = "Join Lobby"
+text = "Show Friend Lobbies"
 
 [connection signal="pressed" from="LobbyUI/HBoxContainer/ShowLobbiesButton" to="." method="_on_open_lobby_list_pressed"]
 [connection signal="pressed" from="LobbyUI/HBoxContainer/CreateLobbyButton" to="." method="create_lobby"]
+[connection signal="pressed" from="LobbyUI/HBoxContainer/JoinLobbyButton" to="." method="get_lobbies_with_friends"]
