@@ -37,22 +37,6 @@ func _ready():
 			register_player.rpc_id(id, SteamGlobal.playerUsername)
 	)
 	
-func check_command_line() -> void:
-	var these_arguments: Array = OS.get_cmdline_args()
-	
-	# There are arguments to process
-	if these_arguments.size() > 0:
-		
-		# A Steam connection argument exists
-		if these_arguments[0] == "+connect_lobby":
-			
-			# Lobby invite exists so try to connect to it
-			if int(these_arguments[1]) > 0:
-				
-				# At this point, you'll probably want to change scenes
-				# Something like a loading into lobby screen
-				print("Command line lobby ID: %s" % these_arguments[1])
-				join_lobby(int(these_arguments[1]))
 
 
 #region Lobby Created
@@ -68,21 +52,20 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		print("Created a lobby: %s" % lobby_id)
 
 		# Set this lobby as joinable, just in case, though this should be done by default
-		
-
 		# Set some lobby data
 		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
 		Steam.setLobbyData(lobby_id, "mode", "")
 		Steam.setLobbyJoinable(lobby_id, true)
 		
 		# Allow P2P connections to fallback to being relayed through Steam if needed
-		#var set_relay: bool = Steam.allowP2PPacketRelay(true)
-		#print("Allowing Steam to be relay backup: %s" % set_relay)
+		# var set_relay: bool = Steam.allowP2PPacketRelay(true)
+		# print("Allowing Steam to be relay backup: %s" % set_relay)
 		create_steam_socket()
 		
-		#get_tree().root.add_child(kart_lobby)
-		#main_menu.hide()
-		assert(multiplayer.is_server())
+		get_tree().root.add_child(kart_lobby)
+		main_menu.hide()
+		#assert(multiplayer.is_server())
+		print("Is Server? ", multiplayer.is_server())
 	else:
 		print("ERROR ON LOBBY CREATION")
 #endregion 
@@ -142,7 +125,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 			# Get the lobby members
 			#lobby_members[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
 			get_lobby_members()
-			assert(multiplayer.is_server())
+			#assert(multiplayer.is_server())
 
 		# Make the initial handshake
 		#make_p2p_handshake()
@@ -179,7 +162,7 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 	join_lobby(this_lobby_id)
 	
 #endregion 
-
+#region Lobby Members
 func get_lobby_members() -> void:
 	# Clear your previous lobby list
 	lobby_members.clear()
@@ -197,6 +180,9 @@ func get_lobby_members() -> void:
 
 		# Add them to the list
 		lobby_members.append({"steam_id":member_steam_id, "steam_name":member_steam_name})
+	
+	print(lobby_members)
+#endregion
 
 func leave_lobby() -> void:
 	# If in a lobby, leave it
@@ -222,12 +208,21 @@ func leave_lobby() -> void:
 func create_steam_socket():
 	peer = SteamMultiplayerPeer.new()
 	peer.create_host(0)
-	multiplayer.set_multiplayer_peer(peer)
+	multiplayer.multiplayer_peer = peer
+	
+	print("Steam Socket Created")
+	print(multiplayer)
+	print(multiplayer.multiplayer_peer)
 
 func connect_steam_socket(steam_id : int):
 	peer = SteamMultiplayerPeer.new()
 	peer.create_client(steam_id, 0)
-	multiplayer.set_multiplayer_peer(peer)
+	multiplayer.multiplayer_peer = peer
+	
+	print("Steam Socket Connected")
+	print(multiplayer)
+	print(multiplayer.multiplayer_peer)
+	
 #endregion
 
 #region Player Name Management
@@ -252,10 +247,27 @@ func register_player(new_player_name : String):
 # A user's information has changed
 func _on_persona_change(this_steam_id: int, _flag: int) -> void:
 	# Make sure you're in a lobby and this user is valid or Steam might spam your console log
-	if lobby_id > 0:
+	if lobby_id == this_steam_id:
 		print("A user (%s) had information change, update the lobby list" % this_steam_id)
 
 		# Update the player list
 		get_lobby_members()
 
 #endregion
+
+func check_command_line() -> void:
+	var these_arguments: Array = OS.get_cmdline_args()
+	
+	# There are arguments to process
+	if these_arguments.size() > 0:
+		
+		# A Steam connection argument exists
+		if these_arguments[0] == "+connect_lobby":
+			
+			# Lobby invite exists so try to connect to it
+			if int(these_arguments[1]) > 0:
+				
+				# At this point, you'll probably want to change scenes
+				# Something like a loading into lobby screen
+				print("Command line lobby ID: %s" % these_arguments[1])
+				join_lobby(int(these_arguments[1]))
