@@ -7,10 +7,11 @@ var peer : MultiplayerPeer = null
 var is_host: bool = false
 var lobby_data
 var lobby_id: int = 0
-var lobby_members: Array = []
 var lobby_members_max: int = 8
 var lobby_vote_kick: bool = false
 var steam_id: int = 0
+
+var players := {}
 
 
 var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
@@ -87,9 +88,9 @@ func _on_lobby_match_list(these_lobbies: Array) -> void:
 	#print("on_lobby_match_list: ", these_lobbies)
 	print("Lobby Num: ", len(these_lobbies))
 	for this_lobby in these_lobbies:
-		create_lobby_button(this_lobby)
+		create_join_lobby_button(this_lobby)
 
-func create_lobby_button(this_lobby):
+func create_join_lobby_button(this_lobby):
 	var lobby_name: String = Steam.getLobbyData(this_lobby, "name")
 	var lobby_mode: String = Steam.getLobbyData(this_lobby, "mode")
 
@@ -133,7 +134,7 @@ func get_lobbies_with_friends() -> Dictionary:
 		lobby.queue_free()
 		
 	for this_lobby in results:
-		create_lobby_button(this_lobby)
+		create_join_lobby_button(this_lobby)
 	
 	return results
 
@@ -141,10 +142,9 @@ func get_lobbies_with_friends() -> Dictionary:
 #region Lobby Joined
 func join_lobby(this_lobby_id: int) -> void:
 	print("Attempting to join lobby %s" % lobby_id)
-
 	# Clear any previous lobby members lists, if you were in a previous lobby
-	lobby_members.clear()
-
+	players.clear()
+	
 	# Make the lobby join request to Steam
 	Steam.joinLobby(int(this_lobby_id))
 	
@@ -158,12 +158,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 			connect_steam_socket(id)
 			register_player.rpc(SteamGlobal.playerUsername)
 			# Get the lobby members
-			#lobby_members[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
-			get_lobby_members()
-			#assert(multiplayer.is_server())
-
-		# Make the initial handshake
-		#make_p2p_handshake()
+			players[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
 
 	# Else it failed for some reason
 	else:
@@ -195,29 +190,7 @@ func _on_lobby_join_requested(this_lobby_id: int, friend_id: int) -> void:
 
 	# Attempt to join the lobby
 	join_lobby(this_lobby_id)
-	
 #endregion 
-#region Lobby Members
-func get_lobby_members() -> void:
-	# Clear your previous lobby list
-	lobby_members.clear()
-
-	# Get the number of members from this lobby from Steam
-	var num_of_members: int = Steam.getNumLobbyMembers(lobby_id)
-
-	# Get the data of these players from Steam
-	for this_member in range(0, num_of_members):
-		# Get the member's Steam ID
-		var member_steam_id: int = Steam.getLobbyMemberByIndex(lobby_id, this_member)
-
-		# Get the member's Steam name
-		var member_steam_name: String = Steam.getFriendPersonaName(member_steam_id)
-
-		# Add them to the list
-		lobby_members.append({"steam_id":member_steam_id, "steam_name":member_steam_name})
-	
-	print(lobby_members)
-#endregion
 
 func leave_lobby() -> void:
 	# If in a lobby, leave it
@@ -227,17 +200,8 @@ func leave_lobby() -> void:
 
 		# Wipe the Steam lobby ID then display the default lobby ID and player list title
 		lobby_id = 0
-
-		# Close session with all users
-		for this_member in lobby_members:
-			# Make sure this isn't your Steam ID
-			if this_member['steam_id'] != steam_id:
-
-				# Close the P2P session
-				Steam.closeP2PSessionWithUser(this_member['steam_id'])
-
 		# Clear the local lobby list
-		lobby_members.clear()
+		players.clear()
 		
 #region Steam Peer Management
 func create_steam_socket():
@@ -264,30 +228,29 @@ func connect_steam_socket(steam_id : int):
 func _make_string_unique(query : String) -> String:
 	var count := 2
 	var trial := query
-	for lobby_member in lobby_members:
-		if lobby_member.has(trial):
-			trial = query + ' ' + str(count)
-			count += 1
+	if players.values().has(trial):
+		trial = query + ' ' + str(count)
+		count += 1
 	return trial
 
 @rpc("call_local", "any_peer")
 func get_player_name() -> String:
-	return lobby_members[multiplayer.get_remote_sender_id()]
+	return players[multiplayer.get_remote_sender_id()]
 	
 # Lobby management functions.
 @rpc("call_local", "any_peer")
 func register_player(new_player_name : String):
 	var id = multiplayer.get_remote_sender_id()
-	lobby_members[id] = _make_string_unique(new_player_name)
-	
+	players[id] = _make_string_unique(new_player_name)
+
+func unregister_player(id):
+	players.erase(id)
+
 # A user's information has changed
 func _on_persona_change(this_steam_id: int, _flag: int) -> void:
 	# Make sure you're in a lobby and this user is valid or Steam might spam your console log
 	if lobby_id == this_steam_id:
 		print("A user (%s) had information change, update the lobby list" % this_steam_id)
-
-		# Update the player list
-		get_lobby_members()
 
 #endregion
 
