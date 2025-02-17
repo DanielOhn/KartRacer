@@ -6,6 +6,7 @@ const PACKET_READ_LIMIT: int = 32
 
 var peer : MultiplayerPeer = null
 var player_name
+var players_loaded = 0
 
 var is_host: bool = false
 var lobby_data
@@ -294,16 +295,24 @@ func check_command_line() -> void:
 @rpc("call_local")
 func load_world():
 	# Change scene.
-	var world = load("res://scenes/WorldHub.tscn").instantiate()
+	var world = preload("res://scenes/WorldHub.tscn").instantiate()
 	$"../World".add_child.call_deferred(world)
-	
-	
 	$"../SteamOverlay".hide()
 	$".".hide()
 	$"../UserLobby".hide()
 	
 	
 	get_tree().set_pause(false) # Unpause and unleash the game!
+
+# Every peer will call this when they have loaded the game scene.
+@rpc("any_peer", "call_local", "reliable")
+func player_loaded():
+	if multiplayer.is_server():
+		players_loaded += 1
+		print("Loaded Player, Players Loaded: ", players_loaded)
+		if players_loaded == players.size():
+			$"../World/WorldHub".start_game()
+			players_loaded = 0
 
 func begin_game():
 	#Ensure that this is only running on the server; if it isn't, we need

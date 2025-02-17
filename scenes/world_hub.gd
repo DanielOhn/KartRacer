@@ -5,11 +5,15 @@ func _ready():
 	
 	if not multiplayer.is_server():
 		print("Not A Server")
+		var steamLobby = get_tree().get_current_scene().get_node("SteamLobby")
+		steamLobby.player_loaded.rpc_id(1)
 		return 
 	
 	multiplayer.peer_connected.connect(add_player)
 	multiplayer.peer_disconnected.connect(del_player)
 	
+
+func start_game():
 	print("Multiplayer Peers: ", multiplayer.get_peers())
 	
 	for id in multiplayer.get_peers():
@@ -18,7 +22,7 @@ func _ready():
 
 	if not OS.has_feature("dedicated_server"):
 		add_player(1)
-		
+
 func add_player(id: int):
 	print("Add player: " + str(id))
 	var character = preload("res://assets/kart.tscn").instantiate()

@@ -15,7 +15,6 @@ extends CharacterBody3D
 
 func _ready():
 	if str(name).is_valid_int():
-		#get_node()
 		print("Player has spawned: ", name)
 		
 	if player == multiplayer.get_unique_id():
