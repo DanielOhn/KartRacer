@@ -1,12 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://defltxwplupla"]
+[gd_scene load_steps=9 format=3 uid="uid://cpuhmbduwtjwy"]
 
-[ext_resource type="Texture2D" uid="uid://pgshxxrinsm1" path="res://assets/textures/texture_01.png" id="1_gtif2"]
-[ext_resource type="PackedScene" uid="uid://d0o1ys10obtr1" path="res://assets/kart.tscn" id="3_8wd2g"]
-[ext_resource type="PackedScene" uid="uid://ceuv4sm3jqeep" path="res://assets/player_spawner.tscn" id="3_n7c4a"]
+[ext_resource type="Texture2D" uid="uid://pgshxxrinsm1" path="res://assets/textures/texture_01.png" id="1_bjdkv"]
+[ext_resource type="Script" path="res://scenes/world_hub.gd" id="1_eweos"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvbrg"]
 albedo_color = Color(0.828365, 0.875661, 1, 1)
-albedo_texture = ExtResource("1_gtif2")
+albedo_texture = ExtResource("1_bjdkv")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2tvqy"]
 material = SubResource("StandardMaterial3D_kvbrg")
@@ -24,6 +23,7 @@ material = SubResource("StandardMaterial3D_ore1v")
 data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
 [node name="WorldHub" type="Node3D"]
+script = ExtResource("1_eweos")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(100, 0, 0, 0, 2, 0, 0, 0, 100, 1, -2, -0.637)
@@ -44,12 +44,9 @@ mesh = SubResource("BoxMesh_gf3eg")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PinkBox/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hhcnl")
 
-[node name="PlayerSpawner" parent="." instance=ExtResource("3_n7c4a")]
+[node name="PlayerSpawner" type="Node3D" parent="."]
 
-[node name="MultiplayerSpawner" parent="PlayerSpawner" index="0"]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://assets/kart.tscn")
-spawn_path = NodePath("..")
+spawn_path = NodePath("../PlayerSpawner")
 spawn_limit = 8
-playerScene = ExtResource("3_8wd2g")
-
-[editable path="PlayerSpawner"]

@@ -6,6 +6,12 @@ extends MultiplayerSpawner
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	spawn_function = spawnPlayer
+	if not multiplayer.is_server():
+		print("RETURNING")
+		return
+	
+	print("Level Ready")
+
 	if is_multiplayer_authority():
 		spawn(1)
 		multiplayer.peer_connected.connect(spawn)

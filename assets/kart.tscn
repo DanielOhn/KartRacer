@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://d0o1ys10obtr1"]
+[gd_scene load_steps=8 format=3 uid="uid://d0o1ys10obtr1"]
 
 [ext_resource type="Script" path="res://Scripts/kart.gd" id="1_nve8y"]
+[ext_resource type="Script" path="res://assets/input_synchronizer.gd" id="2_jqsbb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c8b20"]
 albedo_color = Color(1, 0, 0, 1)
@@ -14,14 +15,29 @@ material = SubResource("StandardMaterial3D_c8b20")
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath(".:velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
-[node name="Kart" type="CharacterBody3D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5f0wt"]
+properties/0/path = NodePath("../Camera3D:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:input_motion")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:jumping")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Kart" type="CharacterBody3D" node_paths=PackedStringArray("InputSync")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.11868, 0)
 collision_layer = 7
 collision_mask = 7
 script = ExtResource("1_nve8y")
 SPEED = 800.0
 ROTATE_speed = 2.5
+InputSync = NodePath("InputSynchronizer")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, 0, 0)
@@ -36,5 +52,11 @@ shape = SubResource("CapsuleShape3D_lkc3p")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
 current = true
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5fqyu")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." node_paths=PackedStringArray("camera")]
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_5f0wt")
+script = ExtResource("2_jqsbb")
+camera = NodePath("../Camera3D")

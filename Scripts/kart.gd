@@ -5,11 +5,21 @@ extends CharacterBody3D
 @export var JUMP_VELOCITY = 4.5
 @export var  ROTATE_speed = 0.5
 @onready var camera: Camera3D = $Camera3D
+@export var InputSync: MultiplayerSynchronizer
+
+@export var player:= 1:
+	set(id):
+		print("Player ID: ", id)
+		player = id
+		InputSync.set_multiplayer_authority(id)
 
 func _ready():
 	if str(name).is_valid_int():
 		#get_node()
 		print("Player has spawned: ", SteamGlobal.playerUsername)
+		
+	if player == multiplayer.get_unique_id():
+		camera.current = true
 
 @rpc("any_peer", "call_local")
 func set_authority(id: int) -> void:

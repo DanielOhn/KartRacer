@@ -275,9 +275,9 @@ func check_command_line() -> void:
 @rpc("call_local")
 func load_world():
 	# Change scene.
-	var world = load("res://scenes/Lobby/lobby.tscn").instantiate()
-	get_tree().get_root().add_child(world)
-	get_tree().get_root().get_node("Lobby").hide()
+	var world = load("res://scenes/WorldHub.tscn").instantiate()
+	print(get_tree())
+	$"../World".add_child.call_deferred(world)
 
 	get_tree().set_pause(false) # Unpause and unleash the game!
 
@@ -287,33 +287,5 @@ func begin_game():
 	assert(multiplayer.is_server())
 	
 	#call load_world on all clients
-	load_world.rpc()
-	
-	#grab the world node and player scene
-	var world : Node3D = get_tree().get_root().get_node("Lobby")
-	world.show()
-	var player_scene := load("res://assets/kart.tscn")
-	
-	#Iterate over our connected peer ids
-	var spawn_index = 0
-	for peer_id in players:
-		print("PEER ID: ", peer_id)
-		var player = player_scene.instantiate()
-		
-		player.set_player_name(players[peer_id])
-		# "true" forces a readable name, which is important, as we can't have sibling nodes
-		# with the same name.
-		world.get_node("MultiplayerSpawner").add_child(player, true)
-		
-		#Set the authorization for the player. This has to be called on all peers to stay in sync.
-		player.set_authority.rpc(peer_id)
-		
-		#Grab our location for the player.
-		#world.get_node("MultiplayerSpawner").SpawnPlayer()
-		var target = world.get_node("PinkBox").position
-		print("PINK BOX: ", world.get_node("PinkBox"))
-		#The peer has authority over the player's position, so to sync it properly,
-		#we need to set that position from that peer with an RPC.
-		player.teleport.rpc_id(peer_id, target)
-		
-		spawn_index += 1
+	if multiplayer.is_server():
+		load_world.rpc()

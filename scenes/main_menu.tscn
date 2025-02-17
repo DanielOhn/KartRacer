@@ -24,3 +24,9 @@ UserLobby = NodePath("../UserLobby")
 layout_mode = 1
 steam_lobby = NodePath("../SteamLobby")
 main_menu = NodePath("..")
+
+[node name="WorldSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../World")
+spawn_limit = 1
+
+[node name="World" type="Node" parent="."]
