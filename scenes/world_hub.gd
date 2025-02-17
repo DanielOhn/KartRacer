@@ -9,8 +9,8 @@ func _ready():
 		steamLobby.player_loaded.rpc_id(1)
 		return 
 	
-	multiplayer.peer_connected.connect(add_player)
-	multiplayer.peer_disconnected.connect(del_player)
+	#multiplayer.peer_connected.connect(add_player)
+	#multiplayer.peer_disconnected.connect(del_player)
 	
 
 func start_game():
@@ -26,12 +26,13 @@ func start_game():
 func add_player(id: int):
 	print("Add player: " + str(id))
 	var character = preload("res://assets/kart.tscn").instantiate()
+	#character.set_authority(id)
 	character.player = id
 
 	var target = $PinkBox.position
 	
 
-	character.set_authority(id)
+	
 	#character.teleport.rpc_id(id, target)
 
 	character.position = target
