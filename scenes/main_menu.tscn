@@ -15,10 +15,11 @@ grow_vertical = 2
 [node name="SteamOverlay" parent="." instance=ExtResource("1_7307b")]
 layout_mode = 1
 
-[node name="SteamLobby" parent="." node_paths=PackedStringArray("UserLobby") instance=ExtResource("2_s2l1t")]
+[node name="SteamLobby" parent="." node_paths=PackedStringArray("UserLobby", "player_list") instance=ExtResource("2_s2l1t")]
 layout_mode = 1
 scale = Vector2(1.00826, 1)
 UserLobby = NodePath("../UserLobby")
+player_list = NodePath("../UserLobby/VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList/ItemList")
 
 [node name="UserLobby" parent="." node_paths=PackedStringArray("steam_lobby", "main_menu") instance=ExtResource("3_jw51d")]
 layout_mode = 1
@@ -30,3 +31,6 @@ spawn_path = NodePath("../World")
 spawn_limit = 1
 
 [node name="World" type="Node" parent="."]
+
+[editable path="SteamLobby"]
+[editable path="UserLobby"]

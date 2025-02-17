@@ -72,9 +72,16 @@ size_flags_vertical = 3
 
 [node name="Players" type="RichTextLabel" parent="VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 bbcode_enabled = true
 text = "Lobby Members:"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="ItemList" type="ItemList" parent="VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="HButtonContainer" type="HBoxContainer" parent="VUserLobbyContainer"]
 layout_mode = 2

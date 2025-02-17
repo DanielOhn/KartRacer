@@ -5,6 +5,7 @@ const PACKET_READ_LIMIT: int = 32
 @export var UserLobby: Control
 
 var peer : MultiplayerPeer = null
+var player_name
 
 var is_host: bool = false
 var lobby_data
@@ -15,8 +16,12 @@ var steam_id: int = 0
 
 var players := {}
 
+@export var player_list: ItemList
+
 var kart_lobby = load("res://scenes/Lobby/lobby.tscn").instantiate()
 @onready var SteamLobby = $"."
+
+signal player_list_changed()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,16 +41,18 @@ func _ready():
 	multiplayer.peer_connected.connect(
 		func(id : int):
 			# Tell the connected peer that we have also joined
-			register_player.rpc_id(id, SteamGlobal.playerUsername)
+			register_player.rpc_id(id, player_name)
 	)
 	
 
 
 #region Lobby Created
 func create_lobby() -> void:
+	player_name = SteamGlobal.playerUsername
 	# Make sure a lobby is not already set
 	if lobby_id == 0:
 		Steam.createLobby(2, lobby_members_max)
+		
 
 func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 	if connect == 1:
@@ -55,7 +62,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 
 		# Set this lobby as joinable, just in case, though this should be done by default
 		# Set some lobby data
-		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % SteamGlobal.playerUsername)
+		Steam.setLobbyData(lobby_id, "name", "%s Lobby" % player_name)
 		Steam.setLobbyData(lobby_id, "mode", "")
 		Steam.setLobbyJoinable(lobby_id, true)
 		
@@ -64,6 +71,7 @@ func _on_lobby_created(connect: int, this_lobby_id: int) -> void:
 		# print("Allowing Steam to be relay backup: %s" % set_relay)
 		create_steam_socket()
 		
+		player_list.add_item(player_name)
 		SteamLobby.hide()
 		UserLobby.show()
 		#assert(multiplayer.is_server())
@@ -143,6 +151,7 @@ func get_lobbies_with_friends() -> Dictionary:
 #region Lobby Joined
 func join_lobby(this_lobby_id: int) -> void:
 	print("Attempting to join lobby %s" % lobby_id)
+	player_name = SteamGlobal.playerUsername
 	# Clear any previous lobby members lists, if you were in a previous lobby
 	players.clear()
 	
@@ -157,9 +166,13 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		var id = Steam.getLobbyOwner(this_lobby_id)
 		if id != Steam.getSteamID():
 			connect_steam_socket(id)
-			register_player.rpc(SteamGlobal.playerUsername)
-			# Get the lobby members
-			players[multiplayer.get_unique_id()] = SteamGlobal.playerUsername
+			SteamLobby.hide()
+			UserLobby.show()
+			
+			if peer:
+				register_player(player_name)
+				# Get the lobby members
+				players[multiplayer.get_unique_id()] = player_name
 
 	# Else it failed for some reason
 	else:
@@ -198,6 +211,7 @@ func leave_lobby() -> void:
 	if lobby_id != 0:
 		# Send leave request to Steam
 		Steam.leaveLobby(lobby_id)
+		player_list.clear()
 
 		# Wipe the Steam lobby ID then display the default lobby ID and player list title
 		lobby_id = 0
@@ -243,9 +257,14 @@ func get_player_name() -> String:
 func register_player(new_player_name : String):
 	var id = multiplayer.get_remote_sender_id()
 	players[id] = _make_string_unique(new_player_name)
+	
+	player_list.add_item(new_player_name)
+	player_list_changed.emit()
 
 func unregister_player(id):
+	player_list.remove_item(players[id])
 	players.erase(id)
+	player_list_changed.emit()
 
 # A user's information has changed
 func _on_persona_change(this_steam_id: int, _flag: int) -> void:
@@ -276,9 +295,14 @@ func check_command_line() -> void:
 func load_world():
 	# Change scene.
 	var world = load("res://scenes/WorldHub.tscn").instantiate()
-	print(get_tree())
 	$"../World".add_child.call_deferred(world)
-
+	
+	
+	$"../SteamOverlay".hide()
+	$".".hide()
+	$"../UserLobby".hide()
+	
+	
 	get_tree().set_pause(false) # Unpause and unleash the game!
 
 func begin_game():

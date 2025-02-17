@@ -11,12 +11,12 @@ extends CharacterBody3D
 	set(id):
 		print("Player ID: ", id)
 		player = id
-		InputSync.set_multiplayer_authority(id)
+		#InputSync.set_multiplayer_authority(id)
 
 func _ready():
 	if str(name).is_valid_int():
 		#get_node()
-		print("Player has spawned: ", SteamGlobal.playerUsername)
+		print("Player has spawned: ", name)
 		
 	if player == multiplayer.get_unique_id():
 		camera.current = true

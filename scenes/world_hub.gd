@@ -27,12 +27,12 @@ func add_player(id: int):
 	var target = $PinkBox.position
 	
 
-	#character.set_authority.rpc(id)
+	character.set_authority(id)
 	#character.teleport.rpc_id(id, target)
 
 	character.position = target
 	character.name = str(id)
-	$PlayerSpawner.add_child.call_deferred(character, true)
+	$PlayerSpawner.add_child(character, true)
 	
 func del_player(id: int):
 	if not $PlayerSpawner.has_node(str(id)):
