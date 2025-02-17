@@ -6,6 +6,11 @@ extends CharacterBody3D
 @export var  ROTATE_speed = 0.5
 @onready var camera: Camera3D = $Camera3D
 
+func _ready():
+	if str(name).is_valid_int():
+		#get_node()
+		print("Player has spawned: ", SteamGlobal.playerUsername)
+
 @rpc("any_peer", "call_local")
 func set_authority(id: int) -> void:
 	set_multiplayer_authority(id)

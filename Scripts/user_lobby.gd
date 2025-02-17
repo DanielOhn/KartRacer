@@ -9,6 +9,7 @@ func _ready():
 func _on_exit_button_pressed():
 	steam_lobby.leave_lobby()
 	hide()
+	steam_lobby.show()
 	
 
 func _on_start_game_pressed():

@@ -19,8 +19,13 @@ func spawnPlayer(data):
 	
 	p.set_multiplayer_authority(data)
 	players[data] = p
+	print("SPAWNING PLAYER")
 	return p
 	
 func removePlayer(data):
 	players[data].queue_free()
 	players.erase(data)
+
+@rpc("any_peer", "call_local")
+func teleport(new_position : Vector2) -> void:
+	self.position = new_position

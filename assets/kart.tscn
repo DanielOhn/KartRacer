@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0o1ys10obtr1"]
+[gd_scene load_steps=6 format=3 uid="uid://d0o1ys10obtr1"]
 
 [ext_resource type="Script" path="res://Scripts/kart.gd" id="1_nve8y"]
 
@@ -9,6 +9,11 @@ albedo_color = Color(1, 0, 0, 1)
 material = SubResource("StandardMaterial3D_c8b20")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lkc3p"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5fqyu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [node name="Kart" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.11868, 0)
@@ -30,3 +35,6 @@ shape = SubResource("CapsuleShape3D_lkc3p")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
 current = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5fqyu")
