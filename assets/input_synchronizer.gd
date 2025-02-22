@@ -21,7 +21,7 @@ func _ready():
 		set_process(false)
 		set_process_input(false)
 
-func _process(delta):
+func _process(_delta):
 	# handle game pause with esc key
 	if Input.is_action_just_released("ui_cancel"):
 		paused = !paused
@@ -35,7 +35,8 @@ func _process(delta):
 		input_motion = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 		
 		if Input.is_action_just_pressed("ui_accept"):
-			jump.rpc()
+			#jump.rpc()
+			pass
 			
 
 

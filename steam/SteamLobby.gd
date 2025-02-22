@@ -314,6 +314,7 @@ func player_loaded():
 			$"../World/WorldHub".start_game()
 			players_loaded = 0
 
+
 func begin_game():
 	#Ensure that this is only running on the server; if it isn't, we need
 	#to check our code.

@@ -5,13 +5,13 @@ extends CharacterBody3D
 @export var JUMP_VELOCITY = 4.5
 @export var  ROTATE_speed = 0.5
 @onready var camera: Camera3D = $Camera3D
-@onready var InputSync: MultiplayerSynchronizer = %InputSynchronizer
+#@onready var InputSync: MultiplayerSynchronizer = 
 
-@export var player:= 1:
+@export var player := 1:
 	set(id):
 		print("Player ID: ", id)
 		player = id
-		InputSync.set_multiplayer_authority(id)
+		%InputSynchronizer.set_multiplayer_authority(id)
 
 func _ready():
 	if str(name).is_valid_int():
@@ -23,6 +23,7 @@ func _ready():
 @rpc("any_peer", "call_local")
 func set_authority(id: int) -> void:
 	set_multiplayer_authority(id)
+	player = id
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():

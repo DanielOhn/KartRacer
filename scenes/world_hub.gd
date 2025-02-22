@@ -15,29 +15,27 @@ func _ready():
 
 func start_game():
 	print("Multiplayer Peers: ", multiplayer.get_peers())
-	
+	var count = 0
 	for id in multiplayer.get_peers():
 		
-		add_player(id)
-
+		add_player(id, count)
+		count += 1
+	
 	if not OS.has_feature("dedicated_server"):
-		add_player(1)
+		add_player(1, count)
+		count += 1
 
-func add_player(id: int):
+func add_player(id: int, count: int):
 	print("Add player: " + str(id))
 	var character = preload("res://assets/kart.tscn").instantiate()
-	#character.set_authority(id)
-	character.player = id
+	character.set_authority.rpc(id)
+	#character.player = id
 
 	var target = $PinkBox.position
-	
 
-	
-	#character.teleport.rpc_id(id, target)
-
-	character.position = target
+	character.position = Vector3(target.x + count * 10, target.y + count * 10, target.z)
 	character.name = str(id)
-	$PlayerSpawner.add_child(character, true)
+	$PlayerSpawner.add_child.call_deferred(character, true)
 	
 func del_player(id: int):
 	if not $PlayerSpawner.has_node(str(id)):
