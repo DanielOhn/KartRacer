@@ -23,8 +23,11 @@ func _ready():
 
 @rpc("any_peer", "call_local")
 func set_authority(id: int) -> void:
-	set_multiplayer_authority(id)
 	player = id
+	
+	set_multiplayer_authority(id)
+	%InputSynchronizer.set_multiplayer_authority(player)
+	
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
