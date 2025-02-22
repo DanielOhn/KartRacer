@@ -10,7 +10,6 @@ extends CharacterBody3D
 @export var player := 1:
 	set(id):
 		player = id
-		%InputSynchronizer.set_multiplayer_authority(id)
 
 func _ready():
 	if str(name).is_valid_int():
@@ -18,6 +17,9 @@ func _ready():
 		
 	if player == multiplayer.get_unique_id():
 		camera.current = true
+	
+	if OS.has_feature("dedicated_server"):
+		%InputSynchronizer.set_multiplayer_authority(player)
 
 @rpc("any_peer", "call_local")
 func set_authority(id: int) -> void:
