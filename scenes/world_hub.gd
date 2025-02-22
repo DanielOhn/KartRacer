@@ -11,26 +11,33 @@ func _ready():
 	else:
 		if steamLobby.players.size() == 0:
 			print("Server and no players :(")
+			start_game()
 	#multiplayer.peer_connected.connect(add_player)
 	#multiplayer.peer_disconnected.connect(del_player)
 	
 
 func start_game():
 	print("Multiplayer Peers: ", multiplayer.get_peers())
+	var count = 0
+	
 	for id in multiplayer.get_peers():
-		add_player(id)
+		add_player(id, count)
+		count += 1
 	
 	if not OS.has_feature("dedicated_server"):
-		add_player(1)
+		print("Host should hit this.")
+		add_player(1, count)
+		count += 1
 
-func add_player(id: int):
-	assert(multiplayer.is_server())
-	print("PEER ID: " + str(id))
+func add_player(id: int, count):
+	print("ADD PEER: " + str(id))
 	var character = load("res://assets/kart.tscn").instantiate()
-	character.set_authority.rpc(id)
+	
+	if OS.has_feature("dedicated_server"):
+		character.set_authority.rpc(id)
 
 	var target = $PinkBox.position
-	character.position = Vector3(target.x, target.y + 10, target.z)
+	character.position = Vector3(target.x + count * 5, target.y + 2, target.z)
 	character.name = str(id)
 	$PlayerSpawner.add_child(character, true)
 	

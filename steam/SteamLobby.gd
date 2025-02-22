@@ -309,10 +309,9 @@ func load_world():
 func player_loaded():
 	if multiplayer.is_server():
 		players_loaded += 1
-		print("Loaded Player, Players Loaded: ", players_loaded)
+		print("Players Loaded: ", players_loaded)
 		if players_loaded == players.size():
 			$"../World/WorldHub".start_game()
-			players_loaded = 0
 
 
 func begin_game():
