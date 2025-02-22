@@ -33,13 +33,12 @@ func add_player(id: int, count):
 	print("ADD PEER: " + str(id))
 	var character = load("res://assets/kart.tscn").instantiate()
 	
-	if OS.has_feature("dedicated_server"):
-		character.set_authority.rpc(id)
-
 	var target = $PinkBox.position
 	character.position = Vector3(target.x + count * 5, target.y + 2, target.z)
 	character.name = str(id)
 	$PlayerSpawner.add_child(character, true)
+	
+	character.set_authority.rpc(id)
 	
 func del_player(id: int):
 	if not $PlayerSpawner.has_node(str(id)):

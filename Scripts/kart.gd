@@ -26,7 +26,7 @@ func set_authority(id: int) -> void:
 	player = id
 	
 	set_multiplayer_authority(id)
-	%InputSynchronizer.set_multiplayer_authority(player)
+	%InputSynchronizer.set_multiplayer_authority(id)
 	
 
 func _physics_process(delta: float) -> void:

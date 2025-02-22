@@ -296,7 +296,7 @@ func check_command_line() -> void:
 func load_world():
 	# Change scene.
 	var world = preload("res://scenes/WorldHub.tscn").instantiate()
-	$"../World".add_child.call_deferred(world)
+	$"../World".add_child(world)
 	$"../SteamOverlay".hide()
 	$".".hide()
 	$"../UserLobby".hide()
