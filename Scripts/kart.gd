@@ -33,12 +33,13 @@ func _physics_process(delta: float) -> void:
 			velocity += get_gravity() * delta
 
 		# Handle jump.
-		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		if %InputSynchronizer.do_jump and is_on_floor():
 			velocity.y = JUMP_VELOCITY
+			%InputSynchronizer.do_jump = false
 
 		# Get the input direction and handle the movement/deceleration.
 		# As good practice, you should replace UI actions with custom gameplay actions.
-		var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+		var input_dir = %InputSynchronizer.input_motion
 		var direction := (transform.basis * Vector3(0, 0, input_dir.y))
 		if direction:
 			velocity.x = direction.x * SPEED * delta

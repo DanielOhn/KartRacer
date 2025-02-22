@@ -35,7 +35,7 @@ func _process(_delta):
 		input_motion = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 		
 		if Input.is_action_just_pressed("ui_accept"):
-			#jump.rpc()
+			jump.rpc()
 			pass
 			
 
