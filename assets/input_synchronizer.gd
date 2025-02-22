@@ -14,12 +14,15 @@ func _ready():
 	# Disables camera on non-host server setups, or dedicated server builds
 	#camera.current = false
 		
-	if get_multiplayer_authority() == multiplayer.get_unique_id():
-		camera.make_current()
+	if OS.has_feature('dedicated_server'):
+		camera.current = false
 		
-	else: 
-		set_process(false)
-		set_process_input(false)
+		if get_multiplayer_authority() == multiplayer.get_unique_id():
+			camera.make_current()
+			
+		else: 
+			set_process(false)
+			set_process_input(false)
 
 func _process(_delta):
 	# handle game pause with esc key
