@@ -9,7 +9,6 @@ extends CharacterBody3D
 
 @export var player := 1:
 	set(id):
-		print("Player ID: ", id)
 		player = id
 		%InputSynchronizer.set_multiplayer_authority(id)
 
