@@ -1,12 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://csh2auj7hrlnf"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kpqmc"]
-no_depth_test = true
-albedo_color = Color(0.333333, 0.972549, 0, 0.666667)
-billboard_mode = 1
+[ext_resource type="Material" uid="uid://ddb2ec4mxfr26" path="res://material/green.tres" id="1_8pkm8"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_rwph6"]
-material = SubResource("StandardMaterial3D_kpqmc")
+material = ExtResource("1_8pkm8")
 radius = 0.125
 height = 0.25
 radial_segments = 24

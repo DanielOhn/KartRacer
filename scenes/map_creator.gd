@@ -12,6 +12,10 @@ var point_index: int = 0
 var points: Array = []
 enum States {PATH_CREATION, PATH_SELECT, EDIT_POINT}
 
+# Color Materials
+var color_green = preload("res://material/green.tres")
+var color_yellow = preload("res://material/yellow.tres")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	select.position = Vector3(0, y_plane, 0)
@@ -27,22 +31,29 @@ func _input(event):
 			print("Curve Created @ ", select.position)
 			
 			var point = path_point.instantiate()
+			points.append(point)
 			point.position = select.position
 			$Points.add_child(point)
 	
 	if state == States.PATH_SELECT:
 		if event.is_action_pressed("ui_right"):
+			points[point_index].set_surface_override_material(0, color_green)
 			if point_index == path.curve.point_count - 1:
 				point_index = 0
 			else:
 				point_index += 1
+			
+			points[point_index].set_surface_override_material(0, color_yellow)
 			select.position = path.curve.get_point_position(point_index)
 	
 		if event.is_action_pressed("ui_left"):
+			points[point_index].set_surface_override_material(0, color_green)
 			if point_index == 0:
 				point_index = path.curve.point_count - 1
 			else:
 				point_index -= 1
+				
+			points[point_index].set_surface_override_material(0, color_yellow)
 			select.position = path.curve.get_point_position(point_index)
 		# Iterate between road points
 	
@@ -53,6 +64,8 @@ func _input(event):
 			state = States.PATH_SELECT
 			point_index = 0
 			select.position = path.curve.get_point_position(point_index)
+			points[point_index].set_surface_override_material(0, color_yellow)
+			
 			select.hide()
 		else:
 			state = States.PATH_CREATION
@@ -89,4 +102,4 @@ func _physics_process(delta):
 		
 		#point.position = path.curve.get_point_position(0)
 		#$Points.add_child(point)
-		#point.mesh.material.albedo_color = Color(180, 11, 0)
+		#

@@ -1,24 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://bch0dotgoccjq"]
+[gd_scene load_steps=3 format=3 uid="uid://bch0dotgoccjq"]
 
 [ext_resource type="Script" path="res://scripts/road_path.gd" id="1_47gu4"]
 
 [sub_resource type="Curve3D" id="Curve3D_e483d"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_in2jx"]
-size = Vector3(2, 1, 2)
-
-[sub_resource type="MultiMesh" id="MultiMesh_dn283"]
-transform_format = 1
-mesh = SubResource("BoxMesh_in2jx")
-
 [node name="RoadPath" type="Path3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31725, 0.456814, 4.11038)
 curve = SubResource("Curve3D_e483d")
 script = ExtResource("1_47gu4")
-
-[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
-visible = false
-multimesh = SubResource("MultiMesh_dn283")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 use_collision = true
