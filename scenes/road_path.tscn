@@ -10,7 +10,6 @@ curve = SubResource("Curve3D_e483d")
 script = ExtResource("1_47gu4")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
-use_collision = true
 polygon = PackedVector2Array(0, 0, 0, 0.1, 8, 0.1, 8, 0)
 mode = 2
 path_node = NodePath("..")
