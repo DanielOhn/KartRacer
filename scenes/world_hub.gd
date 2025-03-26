@@ -2,6 +2,7 @@ extends Node3D
 
 func _ready():
 	print("Map ready")
+	
 	var steamLobby = get_tree().get_current_scene().get_node("SteamLobby")
 	
 	if not multiplayer.is_server():
@@ -33,7 +34,7 @@ func add_player(id: int, count):
 	print("ADD PEER: " + str(id))
 	var character = load("res://assets/kart.tscn").instantiate()
 	
-	var target = $FinishLine.position
+	var target = $RoadPath/PathFollow3D/Goal/Spawns/SpawnPoint.global_position
 	character.position = Vector3(target.x + count * 5, target.y + 2, target.z)
 	character.name = str(id)
 	$PlayerSpawner.add_child(character, true)

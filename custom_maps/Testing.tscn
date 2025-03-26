@@ -1,7 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://b2q00mtgko31u"]
+[gd_scene load_steps=14 format=3]
 
-[ext_resource type="Script" path="res://scenes/map_creator.gd" id="1_2y8pi"]
-[ext_resource type="Texture2D" uid="uid://qocok0plha3" path="res://material/dirt_road_texture.jpg" id="2_77glp"]
+[ext_resource type="Script" path="res://scenes/world_hub.gd" id="1_twtte"]
+[ext_resource type="Texture2D" path="res://material/dirt_road_texture.jpg" id="2_2wpwr"]
 
 [sub_resource type="Environment" id="Environment_212rh"]
 
@@ -22,9 +22,14 @@ noise = SubResource("FastNoiseLite_tlms1")
 albedo_texture = SubResource("NoiseTexture2D_4ib20")
 
 [sub_resource type="Curve3D" id="Curve3D_nbnw7"]
+_data = {
+"points": PackedVector3Array(0.12, 0, 0.12, -0.12, 0, -0.12, -11.1213, 0, 2.12132, 0.12, 0, 0.12, -0.12, 0, -0.12, -4.82843, 0, 8.48528, 0.12, 0, 0.12, -0.12, 0, -0.12, 0.121321, 0, -6.46447, 0.12, 0, 0.12, -0.12, 0, -0.12, -7.24264, 0, -19.8284, 0.12, 0, 0.12, -0.12, 0, -0.12, -19.8995, 0, -14.1716, 0.12, 0, 0.12, -0.12, 0, -0.12, -24.8493, 0, -4.22183, 0.12, 0, 0.12, -0.12, 0, -0.12, -11.1213, 0, 2.12132),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 7
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ie4ap"]
-albedo_texture = ExtResource("2_77glp")
+albedo_texture = ExtResource("2_2wpwr")
 
 [sub_resource type="BoxMesh" id="BoxMesh_v40is"]
 size = Vector3(10, 0.1, 1)
@@ -38,24 +43,8 @@ albedo_color = Color(0.886275, 0.807843, 0.745098, 0.313726)
 [sub_resource type="PlaneMesh" id="PlaneMesh_k0bbk"]
 material = SubResource("StandardMaterial3D_orlxj")
 
-[sub_resource type="SphereMesh" id="SphereMesh_6wqy4"]
-radius = 0.25
-height = 0.5
-
-[node name="MapCreator" type="Node3D" node_paths=PackedStringArray("select", "path", "camera", "map_name")]
-script = ExtResource("1_2y8pi")
-select = NodePath("Selector")
-path = NodePath("RoadPath")
-camera = NodePath("Selector/Camera3D")
-map_name = NodePath("MapName")
-road_width = 10
-
-[node name="MapName" type="TextEdit" parent="."]
-offset_right = 626.0
-offset_bottom = 36.0
-text = "Testing"
-editable = false
-deselect_on_focus_loss_enabled = false
+[node name="Testing" type="Node3D"]
+script = ExtResource("1_twtte")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_212rh")
@@ -82,15 +71,16 @@ path_rotation = 1
 path_local = true
 path_continuous_u = true
 path_u_distance = 100.0
-path_joined = false
+path_joined = true
 material = SubResource("StandardMaterial3D_ie4ap")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="RoadPath"]
+transform = Transform3D(0.896743, 0, -0.44255, 0, 1, 0, 0.44255, 0, 0.896743, -24.1221, 0, -5.58028)
+progress = 63.4046
 use_model_front = true
 
 [node name="Goal" type="MeshInstance3D" parent="RoadPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.1, 0)
-visible = false
 mesh = SubResource("BoxMesh_v40is")
 
 [node name="LPost" type="MeshInstance3D" parent="RoadPath/PathFollow3D/Goal"]
@@ -135,14 +125,6 @@ mesh = SubResource("PlaneMesh_k0bbk")
 [node name="SpawnPoint7" type="MeshInstance3D" parent="RoadPath/PathFollow3D/Goal/Spawns"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 9)
 mesh = SubResource("PlaneMesh_k0bbk")
-
-[node name="Points" type="Node3D" parent="."]
-
-[node name="Selector" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_6wqy4")
-
-[node name="Camera3D" type="Camera3D" parent="Selector"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 28.4673, 15.6297)
 
 [node name="PlayerSpawner" type="Node3D" parent="."]
 

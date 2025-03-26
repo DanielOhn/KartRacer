@@ -1,16 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://bch0dotgoccjq"]
+[gd_scene load_steps=4 format=3 uid="uid://bch0dotgoccjq"]
 
-[ext_resource type="Script" path="res://scripts/road_path.gd" id="1_47gu4"]
+[ext_resource type="Texture2D" uid="uid://qocok0plha3" path="res://material/dirt_road_texture.jpg" id="2_yawfu"]
 
-[sub_resource type="Curve3D" id="Curve3D_e483d"]
+[sub_resource type="Curve3D" id="Curve3D_nbnw7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ie4ap"]
+albedo_texture = ExtResource("2_yawfu")
 
 [node name="RoadPath" type="Path3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31725, 0.456814, 4.11038)
-curve = SubResource("Curve3D_e483d")
-script = ExtResource("1_47gu4")
+curve = SubResource("Curve3D_nbnw7")
 
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
-polygon = PackedVector2Array(0, 0, 0, 0.1, 8, 0.1, 8, 0)
+[node name="RoadMesh" type="CSGPolygon3D" parent="."]
+polygon = PackedVector2Array(0, 0, 0, 0.1, 10, 0.1, 10, 0)
 mode = 2
 path_node = NodePath("..")
 path_interval_type = 0
@@ -19,8 +20,8 @@ path_simplify_angle = 0.0
 path_rotation = 1
 path_local = true
 path_continuous_u = true
-path_u_distance = 1.25
+path_u_distance = 100.0
 path_joined = false
-smooth_faces = true
+material = SubResource("StandardMaterial3D_ie4ap")
 
 [connection signal="curve_changed" from="." to="." method="_on_curve_changed"]
