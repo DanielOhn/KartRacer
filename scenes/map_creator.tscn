@@ -48,7 +48,7 @@ select = NodePath("Selector")
 path = NodePath("RoadPath")
 camera = NodePath("Selector/Camera3D")
 map_name = NodePath("MapName")
-road_width = 10
+road_width = 14
 
 [node name="MapName" type="TextEdit" parent="."]
 offset_right = 626.0

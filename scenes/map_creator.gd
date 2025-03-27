@@ -31,7 +31,9 @@ var drag_point = null
 func _ready():
 	select.position = Vector3(0, y_plane, 0)
 	$RoadPath/RoadMesh.set_polygon(PackedVector2Array([Vector2(0, 0), Vector2(0, .1), Vector2(road_width, .1), Vector2(road_width, 0)]))
-		
+	path.curve.clear_points()
+	
+	
 func _input(event):
 	#  Add Delete Last Point for Path_Creation
 	#print("INDEX: ", point_index, " - ", path.curve.point_count)
@@ -127,7 +129,7 @@ func _input(event):
 			$MapName.free()
 			$Points.free()
 			name = map_name_string
-			
+			$RoadPath/RoadMesh.use_collision = true
 			
 			var save_scene = PackedScene.new()
 			var save_self = self
@@ -252,6 +254,8 @@ func _physics_process(delta):
 		if select != null:
 			camera.look_at(select.position)
 			cam_rotation = false
+			$RoadPath/RoadMesh.set_polygon(PackedVector2Array([Vector2(0, 0), Vector2(0, .1), Vector2(road_width, .1), Vector2(road_width, 0)]))
+
 	
 		
 		#
