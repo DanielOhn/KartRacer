@@ -295,7 +295,7 @@ func check_command_line() -> void:
 @rpc("call_local")
 func load_world():
 	# Change scene.
-	var world = preload("res://custom_maps/NewMap.tscn").instantiate()
+	var world = preload("res://custom_maps/Testing.tscn").instantiate()
 	$"../World".add_child(world)
 	$"../SteamOverlay".hide()
 	$".".hide()
@@ -311,7 +311,8 @@ func player_loaded():
 		players_loaded += 1
 		print("Players Loaded: ", players_loaded)
 		if players_loaded == players.size():
-			$"../World/WorldHub".start_game()
+			var world = $"../World".get_child(0)
+			world.start_game()
 
 
 func begin_game():
