@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cksroosc5fkm5"]
+
+[resource]
+no_depth_test = true
+albedo_color = Color(0.00679505, 0.269912, 0.411979, 0.666667)
+billboard_mode = 1

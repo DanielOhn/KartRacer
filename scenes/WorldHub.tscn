@@ -35,13 +35,13 @@ mesh = SubResource("CylinderMesh_2tvqy")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_drdi1")
 
-[node name="PinkBox" type="MeshInstance3D" parent="."]
+[node name="FinishLine" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.93639, 0.642817, 5.60773)
 mesh = SubResource("BoxMesh_gf3eg")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PinkBox"]
+[node name="StaticBody3D" type="StaticBody3D" parent="FinishLine"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PinkBox/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FinishLine/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hhcnl")
 
 [node name="PlayerSpawner" type="Node3D" parent="."]

@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://defltxwplupla"]
+[gd_scene load_steps=9 format=3 uid="uid://defltxwplupla"]
 
 [ext_resource type="Texture2D" uid="uid://pgshxxrinsm1" path="res://assets/textures/texture_01.png" id="1_gtif2"]
-[ext_resource type="PackedScene" uid="uid://d0o1ys10obtr1" path="res://assets/kart.tscn" id="3_8wd2g"]
 [ext_resource type="PackedScene" uid="uid://ceuv4sm3jqeep" path="res://assets/player_spawner.tscn" id="3_n7c4a"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvbrg"]
@@ -50,6 +49,5 @@ shape = SubResource("ConcavePolygonShape3D_hhcnl")
 _spawnable_scenes = PackedStringArray("res://assets/kart.tscn")
 spawn_path = NodePath("..")
 spawn_limit = 8
-playerScene = ExtResource("3_8wd2g")
 
 [editable path="PlayerSpawner"]
