@@ -34,8 +34,10 @@ func add_player(id: int, count):
 	print("ADD PEER: " + str(id))
 	var character = load("res://assets/kart.tscn").instantiate()
 	
+
 	var target = $RoadPath/PathFollow3D/Goal/Spawns/SpawnPoint.global_position
 	character.position = Vector3(target.x + count * 5, target.y + 2, target.z)
+
 	character.name = str(id)
 	$PlayerSpawner.add_child(character, true)
 	
