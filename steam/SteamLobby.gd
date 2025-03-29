@@ -295,7 +295,7 @@ func check_command_line() -> void:
 @rpc("call_local")
 func load_world():
 	# Change scene.
-	var world = preload("res://custom_maps/Testing.tscn").instantiate()
+	var world = preload("res://custom_maps/NewMap.tscn").instantiate()
 	$"../World".add_child(world)
 	$"../SteamOverlay".hide()
 	$".".hide()
