@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://qll3i2dteat0"]
+[gd_scene load_steps=4 format=3 uid="uid://qll3i2dteat0"]
 
 [ext_resource type="Script" path="res://steam/SteamLobby.gd" id="1_hw6ie"]
+[ext_resource type="Script" path="res://scripts/button_script.gd" id="2_bik8v"]
+[ext_resource type="PackedScene" uid="uid://b2q00mtgko31u" path="res://scenes/map_creator.tscn" id="3_ukybq"]
 
 [node name="SteamLobby" type="Control"]
 layout_mode = 3
@@ -56,6 +58,13 @@ text = "Create Lobby"
 layout_mode = 2
 text = "Show Friend Lobbies"
 
+[node name="CustomMapButton" type="Button" parent="LobbyUI/HBoxContainer"]
+layout_mode = 2
+text = "Map Maker"
+script = ExtResource("2_bik8v")
+create_scene = ExtResource("3_ukybq")
+
 [connection signal="pressed" from="LobbyUI/HBoxContainer/ShowLobbiesButton" to="." method="_on_open_lobby_list_pressed"]
 [connection signal="pressed" from="LobbyUI/HBoxContainer/CreateLobbyButton" to="." method="create_lobby"]
 [connection signal="pressed" from="LobbyUI/HBoxContainer/JoinLobbyButton" to="." method="get_lobbies_with_friends"]
+[connection signal="pressed" from="LobbyUI/HBoxContainer/CustomMapButton" to="LobbyUI/HBoxContainer/CustomMapButton" method="_on_pressed"]
