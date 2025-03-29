@@ -36,7 +36,7 @@ mesh = SubResource("CylinderMesh_2tvqy")
 shape = SubResource("ConcavePolygonShape3D_drdi1")
 
 [node name="PinkBox" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.93639, 0.642817, 5.60773)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.93639, -0.506994, 35.1571)
 mesh = SubResource("BoxMesh_gf3eg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="PinkBox"]

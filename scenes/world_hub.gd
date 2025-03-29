@@ -34,7 +34,7 @@ func add_player(id: int, count):
 	var character = load("res://assets/kart.tscn").instantiate()
 	
 	var target = $PinkBox.position
-	character.position = Vector3(target.x + count * 5, target.y + 2, target.z)
+	character.position = Vector3(target.x + count * 100, target.y + 2, target.z)
 	character.name = str(id)
 	$PlayerSpawner.add_child(character, true)
 	
