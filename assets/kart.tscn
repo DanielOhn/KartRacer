@@ -19,15 +19,21 @@ height = 0.5
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:velocity")
+properties/1/path = NodePath(".:player")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:player")
+properties/2/path = NodePath(".:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:rotation")
+properties/3/path = NodePath(".:steering")
 properties/3/spawn = true
 properties/3/replication_mode = 1
+properties/4/path = NodePath(".:engine_force")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:brake")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5f0wt"]
 properties/0/path = NodePath(".:input_motion")
@@ -124,7 +130,6 @@ skeleton = NodePath("../..")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, 8.74228e-08, 1, 8.74228e-08, 7.64274e-15, 8.74228e-08, -1, 0.284224, 1.84879, -5.88208)
-current = true
 fov = 66.1123
 
 [node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="."]
