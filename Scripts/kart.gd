@@ -7,7 +7,7 @@ extends VehicleBody3D
 @onready var camera: Camera3D = $Camera3D
 
 const MAX_STEER = 0.8 
-const ENGINE_POWER = 300
+const ENGINE_POWER = 400
 #@onready var InputSync: MultiplayerSynchronizer = 
 
 @export var player := 1:
@@ -30,11 +30,28 @@ func set_authority(id: int) -> void:
 	
 	set_multiplayer_authority(id)
 	%InputSynchronizer.set_multiplayer_authority(id)
-	
+
+var on_floor_time: int = 0 #
+
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	var i := 0
+	while i < state.get_contact_count():
+		var normal := state.get_contact_local_normal(i)
+		var this_contact_on_floor = normal.dot(Vector3.UP) > 0.99
+
+		if this_contact_on_floor:
+			on_floor_time = Time.get_ticks_msec()
+			break
+		i += 1
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
 		# Add the gravity.
-		steering = Input.get_axis("ui_right","ui_left") * MAX_STEER
+
+		# Handle jump.
+		if Input.is_action_just_pressed("ui_accept") and on_floor_time > 0:
+			apply_central_impulse(Vector3(0.0,750.0,0.0))
+			on_floor_time = 0
+		steering = move_toward(Input.get_axis("ui_right","ui_left") * MAX_STEER,0,delta*10)
 		engine_force = Input.get_axis("ui_down","ui_up") * ENGINE_POWER
 		

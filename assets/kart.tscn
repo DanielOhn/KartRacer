@@ -55,6 +55,9 @@ collision_layer = 7
 collision_mask = 7
 gravity_scale = 4.0
 center_of_mass_mode = 1
+center_of_mass = Vector3(0.2, -0.11, 0)
+contact_monitor = true
+max_contacts_reported = 1
 script = ExtResource("1_nve8y")
 SPEED = 800.0
 ROTATE_speed = 2.5
@@ -71,9 +74,10 @@ shape = SubResource("ConvexPolygonShape3D_cccbf")
 [node name="BackRight" type="VehicleWheel3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.349407, 0.127221, -0.628533)
 use_as_traction = true
-wheel_radius = 0.4
-suspension_travel = 5.0
-suspension_stiffness = 50.0
+wheel_roll_influence = 0.01
+wheel_rest_length = 0.2
+suspension_travel = 1.0
+suspension_stiffness = 100.0
 damping_compression = 1.9
 damping_relaxation = 2.0
 
@@ -86,9 +90,10 @@ skeleton = NodePath("../..")
 [node name="BackLeft" type="VehicleWheel3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.746975, 0.127192, -0.628089)
 use_as_traction = true
-wheel_radius = 0.4
-suspension_travel = 5.0
-suspension_stiffness = 50.0
+wheel_roll_influence = 0.01
+wheel_rest_length = 0.2
+suspension_travel = 1.0
+suspension_stiffness = 100.0
 damping_compression = 1.9
 damping_relaxation = 2.0
 
@@ -101,9 +106,11 @@ skeleton = NodePath("../..")
 [node name="FrontLeft" type="VehicleWheel3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.746, 0.123, 0.63)
 use_as_steering = true
-wheel_radius = 0.4
-suspension_travel = 5.0
-suspension_stiffness = 50.0
+wheel_roll_influence = 0.01
+wheel_rest_length = 0.2
+wheel_friction_slip = 12.5
+suspension_travel = 1.0
+suspension_stiffness = 100.0
 damping_compression = 1.9
 damping_relaxation = 2.0
 
@@ -116,9 +123,11 @@ skeleton = NodePath("../..")
 [node name="FrontRight" type="VehicleWheel3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.35, 0.123, 0.557)
 use_as_steering = true
-wheel_radius = 0.4
-suspension_travel = 5.0
-suspension_stiffness = 50.0
+wheel_roll_influence = 0.01
+wheel_rest_length = 0.2
+wheel_friction_slip = 12.5
+suspension_travel = 1.0
+suspension_stiffness = 100.0
 damping_compression = 1.9
 damping_relaxation = 2.0
 
@@ -141,3 +150,6 @@ root_path = NodePath(".")
 replication_config = SubResource("SceneReplicationConfig_5f0wt")
 script = ExtResource("2_jqsbb")
 camera = NodePath("../Camera3D")
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.198444, -0.110533, 0)
