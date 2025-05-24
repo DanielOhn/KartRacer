@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://d0o1ys10obtr1"]
 
-[ext_resource type="Script" path="res://Scripts/kart.gd" id="1_nve8y"]
-[ext_resource type="Script" path="res://assets/input_synchronizer.gd" id="2_jqsbb"]
+[ext_resource type="Script" uid="uid://cxfpiep3k6e7g" path="res://Scripts/kart.gd" id="1_nve8y"]
+[ext_resource type="Script" uid="uid://wdmccrptdgq6" path="res://assets/input_synchronizer.gd" id="2_jqsbb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c8b20"]
 albedo_color = Color(1, 0, 0, 1)

@@ -41,17 +41,18 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 		if this_contact_on_floor:
 			on_floor_time = Time.get_ticks_msec()
-			break
 		i += 1
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
 		# Add the gravity.
-
+		var y_axis = rotation.y
+		var basic_rotation = Basis()
+		basic_rotation = Basis(Quaternion(Vector3.UP, y_axis))
 		# Handle jump.
 		if Input.is_action_just_pressed("ui_accept") and on_floor_time > 0:
 			apply_central_impulse(Vector3(0.0,750.0,0.0))
 			on_floor_time = 0
 		steering = move_toward(Input.get_axis("ui_right","ui_left") * MAX_STEER,0,delta*10)
 		engine_force = Input.get_axis("ui_down","ui_up") * ENGINE_POWER
-		
+		global_transform.basis = global_transform.basis.slerp(basic_rotation, delta * 5.0)

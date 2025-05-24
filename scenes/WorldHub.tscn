@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cpuhmbduwtjwy"]
 
 [ext_resource type="Texture2D" uid="uid://pgshxxrinsm1" path="res://assets/textures/texture_01.png" id="1_bjdkv"]
-[ext_resource type="Script" path="res://scenes/world_hub.gd" id="1_eweos"]
+[ext_resource type="Script" uid="uid://bs548aryhs8ly" path="res://scenes/world_hub.gd" id="1_eweos"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvbrg"]
 albedo_color = Color(0.828365, 0.875661, 1, 1)
@@ -47,6 +47,6 @@ shape = SubResource("ConcavePolygonShape3D_hhcnl")
 [node name="PlayerSpawner" type="Node3D" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://assets/kart.tscn")
+_spawnable_scenes = PackedStringArray("uid://d0o1ys10obtr1")
 spawn_path = NodePath("../PlayerSpawner")
 spawn_limit = 8

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c1rutrcl1ky36"]
 
 [ext_resource type="Texture2D" uid="uid://cjctp4o5sik7m" path="res://icon.svg" id="1_dvran"]
-[ext_resource type="Script" path="res://assets/ui/friend_card.gd" id="1_et5wd"]
+[ext_resource type="Script" uid="uid://b0wfqy1o4gt1t" path="res://assets/ui/friend_card.gd" id="1_et5wd"]
 
 [node name="FriendCard" type="Control"]
 custom_minimum_size = Vector2(180, 40)

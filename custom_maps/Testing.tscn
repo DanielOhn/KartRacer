@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://csphes21ptuvt"]
 
-[ext_resource type="Script" path="res://scenes/world_hub.gd" id="1_l44r4"]
+[ext_resource type="Script" uid="uid://bs548aryhs8ly" path="res://scenes/world_hub.gd" id="1_l44r4"]
 [ext_resource type="Texture2D" uid="uid://qocok0plha3" path="res://material/dirt_road_texture.jpg" id="2_p2alp"]
 
 [sub_resource type="Environment" id="Environment_212rh"]
