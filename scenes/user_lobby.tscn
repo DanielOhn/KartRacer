@@ -1,0 +1,107 @@
+[gd_scene load_steps=2 format=3 uid="uid://b72ecccymrodj"]
+
+[ext_resource type="Script" uid="uid://bkmik378mjkb0" path="res://scripts/user_lobby.gd" id="1_1luss"]
+
+[node name="UserLobby" type="Control"]
+layout_mode = 3
+anchor_top = 0.111
+anchor_right = 0.836
+anchor_bottom = 1.0
+offset_top = -28.928
+offset_right = -0.0720215
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1luss")
+
+[node name="VUserLobbyContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.816
+anchor_bottom = 1.0
+offset_right = 0.191956
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+
+[node name="HContentContainer" type="HBoxContainer" parent="VUserLobbyContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChatContainer" type="ScrollContainer" parent="VUserLobbyContainer/HContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VUserLobbyContainer/HContentContainer/ChatContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ChatBox" type="VBoxContainer" parent="VUserLobbyContainer/HContentContainer/ChatContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VUserLobbyContainer/HContentContainer/ChatContainer/VBoxContainer/ChatBox"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "Chat Box"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VUserLobbyContainer/HContentContainer/ChatContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="VUserLobbyContainer/HContentContainer/ChatContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Chat Here"
+
+[node name="Button" type="Button" parent="VUserLobbyContainer/HContentContainer/ChatContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 3
+text = "Send"
+
+[node name="PlayerListContainer" type="ScrollContainer" parent="VUserLobbyContainer/HContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PlayerList" type="VBoxContainer" parent="VUserLobbyContainer/HContentContainer/PlayerListContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Players" type="RichTextLabel" parent="VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "Lobby Members:"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="ItemList" type="ItemList" parent="VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HButtonContainer" type="HBoxContainer" parent="VUserLobbyContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ExitButton" type="Button" parent="VUserLobbyContainer/HButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Exit Lobby
+"
+
+[node name="VSeparator" type="VSeparator" parent="VUserLobbyContainer/HButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+
+[node name="StartGame" type="Button" parent="VUserLobbyContainer/HButtonContainer"]
+layout_mode = 2
+text = "Start Game"
+
+[connection signal="pressed" from="VUserLobbyContainer/HButtonContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="VUserLobbyContainer/HButtonContainer/StartGame" to="." method="_on_start_game_pressed"]

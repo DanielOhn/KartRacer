@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwpy8m4n6pbcf"]
+
+[ext_resource type="PackedScene" uid="uid://blptl6njmuphf" path="res://steam/steam_overlay.tscn" id="1_7307b"]
+[ext_resource type="PackedScene" uid="uid://qll3i2dteat0" path="res://steam/steam_lobby.tscn" id="2_s2l1t"]
+[ext_resource type="PackedScene" uid="uid://b72ecccymrodj" path="res://scenes/user_lobby.tscn" id="3_jw51d"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SteamOverlay" parent="." instance=ExtResource("1_7307b")]
+layout_mode = 1
+
+[node name="SteamLobby" parent="." node_paths=PackedStringArray("UserLobby", "player_list") instance=ExtResource("2_s2l1t")]
+layout_mode = 1
+scale = Vector2(1.00826, 1)
+UserLobby = NodePath("../UserLobby")
+player_list = NodePath("../UserLobby/VUserLobbyContainer/HContentContainer/PlayerListContainer/PlayerList/ItemList")
+
+[node name="UserLobby" parent="." node_paths=PackedStringArray("steam_lobby", "main_menu") instance=ExtResource("3_jw51d")]
+layout_mode = 1
+steam_lobby = NodePath("../SteamLobby")
+main_menu = NodePath("..")
+
+[node name="WorldSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://tnyc6yudywfl")
+spawn_path = NodePath("../World")
+spawn_limit = 1
+
+[node name="World" type="Node" parent="."]
+
+[editable path="SteamLobby"]
+[editable path="UserLobby"]

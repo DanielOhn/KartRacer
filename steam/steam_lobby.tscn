@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=3 uid="uid://qll3i2dteat0"]
+
+[ext_resource type="Script" uid="uid://ds3j5msk2ml2d" path="res://steam/SteamLobby.gd" id="1_hw6ie"]
+[ext_resource type="Script" uid="uid://cp6bhkp6i4gy2" path="res://scripts/button_script.gd" id="2_bik8v"]
+[ext_resource type="PackedScene" uid="uid://b2q00mtgko31u" path="res://scenes/map_creator.tscn" id="3_ukybq"]
+
+[node name="SteamLobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hw6ie")
+
+[node name="LobbyUI" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LobbyUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.133
+anchor_right = 0.819
+anchor_bottom = 0.943
+offset_top = 80.68
+offset_right = 714.24
+offset_bottom = 569.28
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyUI/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LobbyUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = 577.0
+offset_right = 322.0
+offset_bottom = 608.0
+grow_vertical = 0
+
+[node name="ShowLobbiesButton" type="Button" parent="LobbyUI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Show Lobbies"
+
+[node name="CreateLobbyButton" type="Button" parent="LobbyUI/HBoxContainer"]
+layout_mode = 2
+text = "Create Lobby"
+
+[node name="JoinLobbyButton" type="Button" parent="LobbyUI/HBoxContainer"]
+layout_mode = 2
+text = "Show Friend Lobbies"
+
+[node name="CustomMapButton" type="Button" parent="LobbyUI/HBoxContainer"]
+layout_mode = 2
+text = "Map Maker"
+script = ExtResource("2_bik8v")
+create_scene = ExtResource("3_ukybq")
+
+[connection signal="pressed" from="LobbyUI/HBoxContainer/ShowLobbiesButton" to="." method="_on_open_lobby_list_pressed"]
+[connection signal="pressed" from="LobbyUI/HBoxContainer/CreateLobbyButton" to="." method="create_lobby"]
+[connection signal="pressed" from="LobbyUI/HBoxContainer/JoinLobbyButton" to="." method="get_lobbies_with_friends"]
+[connection signal="pressed" from="LobbyUI/HBoxContainer/CustomMapButton" to="LobbyUI/HBoxContainer/CustomMapButton" method="_on_pressed"]
