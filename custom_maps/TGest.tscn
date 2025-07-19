@@ -1,7 +1,7 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=14 format=3 uid="uid://c0n51jdyi6qrj"]
 
-[ext_resource type="Script" path="res://scenes/world_hub.gd" id="1_f628c"]
-[ext_resource type="Texture2D" path="res://material/dirt_road_texture.jpg" id="2_j8ls5"]
+[ext_resource type="Script" uid="uid://bs548aryhs8ly" path="res://scenes/world_hub.gd" id="1_f628c"]
+[ext_resource type="Texture2D" uid="uid://qocok0plha3" path="res://material/dirt_road_texture.jpg" id="2_j8ls5"]
 
 [sub_resource type="Environment" id="Environment_212rh"]
 
@@ -68,6 +68,7 @@ path_interval_type = 0
 path_interval = 1.0
 path_simplify_angle = 0.0
 path_rotation = 1
+path_rotation_accurate = false
 path_local = true
 path_continuous_u = true
 path_u_distance = 100.0
@@ -75,7 +76,7 @@ path_joined = true
 material = SubResource("StandardMaterial3D_ie4ap")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="RoadPath"]
-transform = Transform3D(-0.687418, -0.124914, 0.715437, -0.178786, 0.983886, 2.94422e-08, -0.70391, -0.12791, -0.698675, 8.18116, 9, 84.9963)
+transform = Transform3D(-0.698666, 0.00360785, 0.715437, 0.00516384, 0.999985, -4.65657e-10, -0.715427, 0.0036944, -0.698675, 8.18126, 9, 84.9962)
 progress = 150.0
 use_model_front = true
 
@@ -129,6 +130,6 @@ mesh = SubResource("PlaneMesh_k0bbk")
 [node name="PlayerSpawner" type="Node3D" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://assets/kart.tscn")
+_spawnable_scenes = PackedStringArray("uid://d0o1ys10obtr1")
 spawn_path = NodePath("../PlayerSpawner")
 spawn_limit = 8

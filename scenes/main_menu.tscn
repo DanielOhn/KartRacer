@@ -27,7 +27,7 @@ steam_lobby = NodePath("../SteamLobby")
 main_menu = NodePath("..")
 
 [node name="WorldSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://custom_maps/NewMap.tscn")
+_spawnable_scenes = PackedStringArray("uid://tnyc6yudywfl")
 spawn_path = NodePath("../World")
 spawn_limit = 1
 
